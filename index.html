@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Fatima with Music Player</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Quicksand&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            color: #5a3e36;
+            text-align: center;
+            overflow-x: hidden;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        h1, h2, h3 {
+            font-family: 'Poppins', sans-serif;
+            color: #d64b76;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            margin-top: 20px;
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+        }
+
+        .date {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: #886661;
+            font-weight: bold;
+        }
+
+        .message {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 25px;
+            background: linear-gradient(to right, #f9f0ff, #fef4ff);
+            border-radius: 15px;
+            font-size: 1.1rem;
+            line-height: 1.7;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            color: #6b5b5b;
+            text-align: left;
+        }
+
+        .message p {
+            margin-bottom: 20px;
+        }
+
+        .slideshow-container {
+            position: relative;
+            width: 90%;
+            max-width: 500px;
+            margin: 30px auto;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .slideshow {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .image-placeholder {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(45deg, #ffd6e7, #ffefef);
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #d64b76;
+            border: 3px dashed #d64b76;
+        }
+
+        .image-placeholder i {
+            font-size: 50px;
+            margin-bottom: 15px;
+        }
+
+        .image-instructions {
+            font-size: 0.9rem;
+            text-align: center;
+            max-width: 80%;
+        }
+
+        /* Music Player Styles */
+        .music-section {
+            background: linear-gradient(to right, #ffecd2, #fcb69f);
+            padding: 25px;
+            border-radius: 18px;
+            margin: 30px 0;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .music-player {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 16px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .player-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .player-header i {
+            font-size: 28px;
+            color: #d64b76;
+            margin-right: 10px;
+        }
+
+        .player-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .control-btn {
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            margin: 0 15px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 1);
+            transform: scale(1.1);
+        }
+
+        .control-btn i {
+            font-size: 20px;
+            color: #d64b76;
+        }
+
+        .play-btn {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(to right, #ff6b6b, #ff8e8e);
+        }
+
+        .play-btn i {
+            color: white;
+        }
+
+        .progress-container {
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 8px;
+            height: 10px;
+            margin: 20px 0;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .progress {
+            background: linear-gradient(to right, #ff6b6b, #ff8e8e);
+            border-radius: 8px;
+            height: 100%;
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+
+        .song-info {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #886661;
+            font-weight: 600;
+        }
+
+        .volume-control {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .volume-slider {
+            width: 100px;
+            margin-left: 10px;
+            -webkit-appearance: none;
+            height: 6px;
+            border-radius: 5px;
+            background: rgba(214, 75, 118, 0.2);
+            outline: none;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #d64b76;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .instructions {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #5a3e36;
+        }
+
+        .instructions ol {
+            text-align: left;
+            padding-left: 20px;
+            margin-top: 10px;
+        }
+
+        .instructions li {
+            margin-bottom: 8px;
+        }
+
+        /* Cake Image Container */
+        .cake-image-container {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+        }
+        .cake-placeholder {
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ffd6e7, #ffefef);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            border: 6px solid white;
+            color: #d64b76;
+            border: 3px dashed #d64b76;
+        }
+
+        .cake-placeholder i {
+            font-size: 50px;
+            margin-bottom: 15px;
+        }
+
+        /* Ending Heart */
+        .big-heart {
+            font-size: 4rem;
+            color: #d64b76;
+            animation: beat 1s infinite;
+            margin: 30px 0 20px;
+        }
+        
+        @keyframes beat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+        }
+
+        /* Confetti */
+        .confetti {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Upload Section */
+        .upload-section {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 25px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .upload-btn {
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'Quicksand', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+            display: inline-flex;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(106, 17, 203, 0.3);
+        }
+
+        .upload-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(106, 17, 203, 0.4);
+        }
+
+        .upload-btn i {
+            margin-right: 8px;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            h1 { font-size: 2.2rem; }
+            .message { font-size: 1rem; padding: 15px; }
+            .big-heart { font-size: 3rem; }
+            .cake-placeholder {
+                width: 220px;
+                height: 220px;
+            }
+            .music-player {
+                margin: 20px;
+                padding: 15px;
+            }
+            .control-btn {
+                margin: 0 10px;
+            }
+            .image-placeholder {
+                height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Happy Birthday Fatima</h1>
+        <div class="date">28th August 2025</div>
+
+        <!-- Cake Image Placeholder -->
+        <div class="cake-image-container">
+            <div class="cake-placeholder">
+                <i class="fas fa-birthday-cake"></i>
+                <p>Add your cake photo</p>
+                <p class="image-instructions">Name it "cake.jpg"</p>
+            </div>
+        </div>
+
+        <!-- Music Player Section -->
+        <div class="music-section">
+            <h2>Birthday Music Player</h2>
+            <div class="music-player">
+                <div class="player-header">
+                    <i class="fas fa-music"></i>
+                    <h3>Play Your Birthday Song</h3>
+                </div>
+                <div class="progress-container">
+                    <div class="progress" id="progress"></div>
+                </div>
+                <div class="song-info">
+                    <span id="current-time">0:00</span>
+                    <span id="duration">0:00</span>
+                </div>
+                <div class="player-controls">
+                    <button class="control-btn" id="prev">
+                        <i class="fas fa-step-backward"></i>
+                    </button>
+                    <button class="control-btn play-btn" id="play">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <button class="control-btn" id="next">
+                        <i class="fas fa-step-forward"></i>
+                    </button>
+                </div>
+                <div class="volume-control">
+                    <i class="fas fa-volume-up" style="color: #d64b76;"></i>
+                    <input type="range" class="volume-slider" id="volume" min="0" max="1" step="0.01" value="0.7">
+                </div>
+            </div>
+
+            <div class="instructions">
+                <p><strong>To add music to this page:</strong></p>
+                <ol>
+                    <li>Upload an MP3 file named "birthday-song.mp3" to your GitHub repository</li>
+                    <li>Make sure it's in the same folder as your HTML file</li>
+                    <li>Refresh this page and click play!</li>
+                </ol>
+            </div>
+
+            <!-- Upload Section -->
+            <div class="upload-section">
+                <h3><i class="fas fa-upload"></i> Alternative: Upload a Song</h3>
+                <p>If you can't add the song to GitHub, you can upload one directly:</p>
+                <input type="file" id="file-upload" accept="audio/*" style="display: none;">
+                <button class="upload-btn" onclick="document.getElementById('file-upload').click()">
+                    <i class="fas fa-file-audio"></i> Choose Music File
+                </button>
+                <p id="file-name" style="margin-top: 10px; font-size: 0.9rem;"></p>
+            </div>
+        </div>
+
+        <!-- Message -->
+        <div class="message">
+            <p>Happy Birthday! Can you believe it's been since 2022 that we first met online!!! Honestly who knew that one random chat would turn into such a good friendship ❤️ Even though we've never met in person 🥲 it genuinely feels like I've known you for a long time and I'm really glad to have you as a friend ❤️</p>
+
+            <p>On your special day I just wanna pray that Allah blesses you with loads of happiness, health, success, and everything you've ever wished for ❤️ May every year just keep getting better for you and may you always have reasons to smile.</p>
+
+            <p>It's honestly rare to find genuine people online but you've been nothing less than that. You're kind, fun to be in convo, supportive, and just really good vibes to talk to. I can't thank you enough for being that kind of person in my life ❤️</p>
+
+            <p>And since I'm far away and can't hand you a gift in person I thought of doing something different. Soo I made this little website for you instead 🎂 Just my small way of saying that you matter and I wanted to make your day a bit more special.</p>
+
+            <p>Enjoy your day to the fullest, Fatima ❤️ You truly deserve it.<br>
+            Wishing you an amazing year ahead ❤️</p>
+        </div>
+
+        <!-- Photo Placeholders -->
+        <div class="slideshow-container">
+            <div class="slideshow">
+                <div class="image-placeholder">
+                    <i class="fas fa-image"></i>
+                    <p>Add photo1.jpg</p>
+                    <p class="image-instructions">Upload a photo named "photo1.jpg"</p>
+                </div>
+                <div class="image-placeholder">
+                    <i class="fas fa-image"></i>
+                    <p>Add photo2.jpg</p>
+                    <p class="image-instructions">Upload a photo named "photo2.jpg"</p>
+                </div>
+                <div class="image-placeholder">
+                    <i class="fas fa-image"></i>
+                    <p>Add photo3.jpg</p>
+                    <p class="image-instructions">Upload a photo named "photo3.jpg"</p>
+                </div>
+                <div class="image-placeholder">
+                    <i class="fas fa-image"></i>
+                    <p>Add photo4.jpg</p>
+                    <p class="image-instructions">Upload a photo named "photo4.jpg"</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ending Heart -->
+        <div>
+            <div class="big-heart">❤️</div>
+            <h2>For Fatima ❤️</h2>
+            <p style="margin-top: 20px; font-size: 1rem; color: #886661;">
+                A little gift from your far away friend, Ramzan
+            </p>
+        </div>
+    </div>
+
+    <!-- Confetti Canvas -->
+    <canvas id="confetti" class="confetti"></canvas>
+
+    <!-- Audio Element -->
+    <audio id="audio-player"></audio>
+
+    <script>
+        // Music Player Functionality
+        const audioPlayer = document.getElementById('audio-player');
+        const playBtn = document.getElementById('play');
+        const prevBtn = document.getElementById('prev');
+        const nextBtn = document.getElementById('next');
+        const progress = document.getElementById('progress');
+        const progressContainer = document.querySelector('.progress-container');
+        const currentTimeEl = document.getElementById('current-time');
+        const durationEl = document.getElementById('duration');
+        const volumeSlider = document.getElementById('volume');
+        const fileUpload = document.getElementById('file-upload');
+        const fileNameEl = document.getElementById('file-name');
+
+        // Try to load the song from the same directory
+        const songUrl = 'birthday-song.mp3';
+        audioPlayer.src = songUrl;
+        
+        // Check if playing
+        let isPlaying = false;
+
+        // Play & Pause
+        function playSong() {
+            isPlaying = true;
+            playBtn.querySelector('i').classList.replace('fa-play', 'fa-pause');
+            audioPlayer.play().catch(error => {
+                console.log("Auto-play was prevented:", error);
+                // Show message to user if the song file is not found
+                if (error.name === "TypeError" && error.message.includes("URL")) {
+                    fileNameEl.innerHTML = "Song file not found. Please upload a song using the button below.";
+                } else {
+                    alert("Please click the play button to start the music. Browsers require user interaction for audio playback.");
+                }
+            });
+        }
+
+        function pauseSong() {
+            isPlaying = false;
+            playBtn.querySelector('i').classList.replace('fa-pause', 'fa-play');
+            audioPlayer.pause();
+        }
+
+        // Update progress bar
+        function updateProgress(e) {
+            const { duration, currentTime } = e.srcElement;
+            // Update progress bar width
+            const progressPercent = (currentTime / duration) * 100;
+            progress.style.width = `${progressPercent}%`;
+            // Calculate display for duration
+            const durationMinutes = Math.floor(duration / 60);
+            let durationSeconds = Math.floor(duration % 60);
+            if (durationSeconds < 10) {
+                durationSeconds = `0${durationSeconds}`;
+            }
+            // Calculate display for currentTime
+            const currentMinutes = Math.floor(currentTime / 60);
+            let currentSeconds = Math.floor(currentTime % 60);
+            if (currentSeconds < 10) {
+                currentSeconds = `0${currentSeconds}`;
+            }
+            // Avoid NaN for a non-ready song
+            if (duration) {
+                durationEl.textContent = `${durationMinutes}:${durationSeconds}`;
+                currentTimeEl.textContent = `${currentMinutes}:${currentSeconds}`;
+            }
+        }
+
+        // Set progress bar when clicking on progress container
+        function setProgress(e) {
+            const width = this.clientWidth;
+            const clickX = e.offsetX;
+            const { duration } = audioPlayer;
+            
+            if (isFinite(duration)) {
+                audioPlayer.currentTime = (clickX / width) * duration;
+            }
+        }
+
+        // Handle file upload
+        fileUpload.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const objectUrl = URL.createObjectURL(file);
+                audioPlayer.src = objectUrl;
+                fileNameEl.textContent = `Loaded: ${file.name}`;
+                
+                // Auto play when loaded
+                audioPlayer.onloadedmetadata = function() {
+                    playSong();
+                };
+            }
+        });
+
+        // Event Listeners
+        playBtn.addEventListener('click', () => {
+            if (isPlaying) {
+                pauseSong();
+            } else {
+                playSong();
+            }
+        });
+        
+        prevBtn.addEventListener('click', () => {
+            // For a single song, just restart
+            audioPlayer.currentTime = 0;
+        });
+        
+        nextBtn.addEventListener('click', () => {
+            // For a single song, just restart
+            audioPlayer.currentTime = 0;
+            if (!isPlaying) playSong();
+        });
+        
+        audioPlayer.addEventListener('timeupdate', updateProgress);
+        audioPlayer.addEventListener('ended', () => {
+            isPlaying = false;
+            playBtn.querySelector('i').classList.replace('fa-pause', 'fa-play');
+        });
+        
+        progressContainer.addEventListener('click', setProgress);
+        volumeSlider.addEventListener('input', () => {
+            audioPlayer.volume = volumeSlider.value;
+        });
+
+        // Confetti
+        const confettiCanvas = document.getElementById("confetti");
+        const confettiCtx = confettiCanvas.getContext("2d");
+        confettiCanvas.width = window.innerWidth;
+        confettiCanvas.height = window.innerHeight;
+
+        const confettiPieces = Array.from({ length: 120 }).map(() => ({
+            x: Math.random() * confettiCanvas.width,
+            y: Math.random() * confettiCanvas.height,
+            r: Math.random() * 6 + 4,
+            d: Math.random() * 50,
+            color: `hsl(${Math.random() * 360}, 100%, 50%)`
+        }));
+
+        function drawConfetti() {
+            confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+            confettiPieces.forEach(p => {
+                confettiCtx.fillStyle = p.color;
+                confettiCtx.fillRect(p.x, p.y, p.r, p.r);
+                p.y += Math.cos(p.d) + 1 + p.r / 2;
+                p.x += Math.sin(p.d);
+                if (p.y > confettiCanvas.height) {
+                    p.y = -10;
+                    p.x = Math.random() * confettiCanvas.width;
+                }
+            });
+        }
+        setInterval(drawConfetti, 20);
+
+        // Resize handler
+        window.addEventListener("resize", () => {
+            confettiCanvas.width = window.innerWidth;
+            confettiCanvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>
